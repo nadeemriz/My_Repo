@@ -39,7 +39,7 @@ class SaleOrderConfirm(models.Model):
                     'location_dest_id': order.partner_id.property_stock_customer.id,
                 })
                 picking.action_confirm()
-                
+
         stock_orders = self.env['stock.picking'].search([('origin','=',self.name)])
         for stock in stock_orders:
             if not stock.sale_order_id:
