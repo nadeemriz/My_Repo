@@ -4,8 +4,14 @@ from odoo import models,fields,api,_
 class SaleOrderConfirm(models.Model):
     _inherit = 'sale.order'
 
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_delivery_count')
+
+    def _compute_delivery_count(self):
+        for order in self:
+            order.delivery_count = self.env['stock.picking'].search_count([('origin', '=', order.name)])
+
     def action_confirm(self):
-        super(SaleOrderConfirm, self).action_confirm()
+        res = super(SaleOrderConfirm, self).action_confirm()
         self.create_order_deliveries()
 
     def create_order_deliveries(self):
@@ -40,10 +46,16 @@ class SaleOrderConfirm(models.Model):
                 })
                 picking.action_confirm()
 
-        stock_orders = self.env['stock.picking'].search([('origin','=',self.name)])
-        for stock in stock_orders:
-            if not stock.sale_order_id:
-                stock.unlink()
+    def action_view_delivery_orders(self):
+        self.ensure_one()
+        delivery_ids = self.env['stock.picking'].search([('origin', '=', self.name)]).ids
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Delivery Orders',
+            'view_mode': 'tree,form',
+            'res_model': 'stock.picking',
+            'domain': [('id', 'in', delivery_ids)],
+        }
 
 
 class DeliveryOrder(models.Model):

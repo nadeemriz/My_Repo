@@ -10,4 +10,21 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_view_delivery_orders"
+                        type="object"
+                        string="Delivery Orders"
+                        class="oe_stat_button"
+                        icon="fa-truck">
+                    <field string="Delivery Orders" widget="statinfo" name="delivery_count"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
 </odoo>
