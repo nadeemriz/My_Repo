@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="delivery_order_form_inherit" model="ir.ui.view">
+        <field name="name">delivery.order.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_view_delivery_orders"
+                        type="object"
+                        string="Delivery Orders"
+                        class="oe_stat_button"
+                        icon="fa-truck">
+                    <field string="Delivery Orders" widget="statinfo" name="delivery_count"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
